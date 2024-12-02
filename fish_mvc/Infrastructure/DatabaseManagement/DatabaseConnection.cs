@@ -1,31 +1,48 @@
 ﻿using fish_mvc.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace fish_mvc.Infrastructure.DatabaseManagement
+// ReSharper disable PropertyCanBeMadeInitOnly.Global
+namespace fish_mvc.Infrastructure.DatabaseManagement;
+public class DatabaseConnection : DbContext
 {
-    public class DatabaseConnection : DbContext
+    public DbSet<Marker> Markers { get; set; } = null!;
+    public DbSet<ARENDATOR> Arendators { get; set; } = null!;
+    public DbSet<Reservation> Reservations { get; set; } = null!;
+    public DbSet<User> Users { get; set; } = default!;
+
+
+    public DatabaseConnection (DbContextOptions<DatabaseConnection> options)
+        : base(options)
     {
-        public DbSet<Marker> Markers { get; set; } = null!;
-        public DbSet<ARENDATOR> Arendators { get; set; } = null!;
-        public DbSet<Reservation> Reservations { get; set; } = null!;
+        EnsureCreated(this);
 
-        //protected override void OnModelCreating(ModelBuilder modelBuilder)
-        //{
-        //    base.OnModelCreating(modelBuilder);
-        //}
-        public DatabaseConnection()
-        {
-            Database.EnsureCreated();
-        }
-        public DatabaseConnection(DbContextOptions<DatabaseConnection> options)
-               : base(options)
-        {
+    }
 
+    protected override void OnConfiguring (DbContextOptionsBuilder optionsBuilder)
+    { base.OnConfiguring(optionsBuilder); }
+
+    protected override void OnModelCreating (ModelBuilder modelBuilder)
+    {
+        modelBuilder.UseCollation("utf8_general_ci");
+        base.OnModelCreating(modelBuilder);
+    }
+
+    private static void EnsureCreated (DatabaseConnection dbContext)
+    {
+        //dbContext.Database.EnsureDeleted();
+        dbContext.Database.EnsureCreated();
+        dbContext.SaveChanges();
+
+        if ( dbContext.Users.FirstOrDefault(x => x.Username == "admin") == null )
+        {
+            dbContext.Users.Add(new User()
+            {
+                Username = "admin",
+                Password = "admin",
+                Role = "admin"
+            });
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            base.OnConfiguring(optionsBuilder);
-        }
+        dbContext.SaveChanges();
     }
 }

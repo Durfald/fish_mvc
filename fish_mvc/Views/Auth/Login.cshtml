@@ -1,0 +1,51 @@
+﻿@model User
+
+<form method="post" asp-controller="Auth" asp-action="Login">
+    <div asp-validation-summary="All" style="color: darkred; font-weight: bold;"></div>
+    <div class="root">
+        <div>
+            <label asp-for="Username"></label>
+            <input type="text" asp-for="Username" />
+        </div>
+        <div>
+            <label asp-for="Password"></label>
+            <input type="password" asp-for="Password" />
+        </div>
+        <button type="submit">Логин</button>
+    </div>
+</form>
+
+<style>
+    .root {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        justify-content: center;
+        align-items: center;
+    }
+
+        .root > div {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+            .root > div > label {
+                max-width: 70px;
+                min-width: 70px;
+                width: 70px;
+            }
+
+            .root > div > input {
+                max-width: 120px;
+                min-width: 120px;
+                width: 120px;
+            }
+
+        .root > button {
+            width: 120px;
+            background: rgba(0,0,0,0);
+            border: 1px solid black;
+            border-radius: 5px;
+        }
+</style>

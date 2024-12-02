@@ -3,20 +3,26 @@
 <h2>Введите данные</h2>
 
 <form asp-action="Create" method="post">
+    <div asp-validation-summary="All" style="color: darkred; font-weight: bold;" ></div>
     <div>
-        <label for="Name">Имя:</label>
-        <input asp-for="Name" />
+        <label asp-for="Name"></label>
+        <input asp-for="Name"/>
         <span asp-validation-for="Name"></span>
     </div>
     <div>
-        <label for="Phone">Телефон:</label>
-        <input asp-for="Phone" />
+        <label asp-for="Phone"></label>
+        <input asp-for="Phone"/>
         <span asp-validation-for="Phone"></span>
     </div>
     <div>
-        <label for="Date">Дата:</label>
-        <input asp-for="Date" type="date" />
+        <label asp-for="Date"></label>
+        <input asp-for="Date" type="date"/>
         <span asp-validation-for="Date"></span>
+    </div>
+    <div>
+        <label asp-for="Place"></label>
+        <input asp-for="Place" type="text" />
+        <span asp-validation-for="Place"></span>
     </div>
     <button type="submit">Отправить</button>
 </form>

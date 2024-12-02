@@ -1,5 +1,7 @@
+using System.Net;
 using fish_mvc.Infrastructure.DatabaseManagement;
 using fish_mvc.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +12,26 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<DatabaseConnection>((options) => { 
     options.UseSqlite(builder.Configuration.GetConnectionString("con"));
 });
+
+#region  Roles
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, ops =>
+    {
+        ops.AccessDeniedPath = "/Auth/AccessDenied";
+        ops.LoginPath = "/Auth/Login";
+        ops.LogoutPath = "/Auth/Logout";
+        ops.ExpireTimeSpan = TimeSpan.FromDays(2);
+        ops.SlidingExpiration = true;
+    });
+
+builder.Services.AddAuthorizationBuilder()
+    .AddPolicy("admin", ops =>
+    {
+        ops.RequireRole("admin");
+    });
+
+#endregion
 
 var app = builder.Build();
 

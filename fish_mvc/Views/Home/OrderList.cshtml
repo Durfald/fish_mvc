@@ -1,0 +1,27 @@
+﻿@model List<ARENDATOR>
+
+<form method="post" asp-controller="Home">
+    <div style="display: flex; flex-direction: column; gap: 10px;">
+        <p>Список:</p>
+        @foreach (var item in Model)
+        {
+            <div class="list-item" style="display: flex; flex-direction: row; gap: 10px; border-bottom: 0.3px solid gray;">
+                <div>@item.Place</div>
+                <div>@item.Name</div>
+                <div>@item.Phone</div>
+                <div>@item.Date</div>
+                <button asp-action="RemoveOrder" asp-route-id="@item.Id">Удалить</button>
+            </div>
+        }
+    </div>
+</form>
+
+<a href="/Home/Index">на главную</a>
+
+<style>
+    .list-item > div {
+        width: 200px;
+        min-width: 200px;
+        max-width: 200px;
+    }
+</style>

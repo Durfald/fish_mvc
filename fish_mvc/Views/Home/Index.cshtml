@@ -1,78 +1,87 @@
-﻿@* @model List<Marker> *@
+﻿@model List<Marker>
 
-@* @{ *@
-@*     ViewData["Title"] = "Home Page"; *@
-@* } *@
+@{
+    ViewData["Title"] = "Home Page";
+}
 
-@* <h2>Image with Markers</h2> *@
-
-@* <div style="position: relative; display: inline-block;"> *@
-@*     <img id="image" src="~/images/Map.jpg" alt="Image" style="width: 600px; height: auto;" /> *@
-
-@*     <div id="markers" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"> *@
-@*         @foreach (var marker in Model) *@
-@*         { *@
-@*             <i class="marker not-hide @(marker.Type) @(marker.Size)" *@
-@*                style="position: absolute; color: red; left: @(marker.X.ToString().Replace(',','.'))%; top: @(marker.Y.ToString().Replace(',','.'))%; cursor: pointer;" *@
-@*                  onclick="showInfo(event)"></i> *@
-@*         } *@
-@*     </div> *@
-@* </div> *@
-
-@* <div id="infoBox" class="not-hide" style="display: none; position: absolute; padding: 10px; background-color: white; border: 1px solid black; z-index: 1000;"> *@
-@*     <form asp-action="SaveUserData" method="post"> *@
-@*         <div> *@
-@*             <label for="Name">Имя:</label> *@
-@*             <input type="text" id="Name" name="Name" required /> *@
-@*         </div> *@
-@*         <div> *@
-@*             <label for="Phone">Номер телефона:</label> *@
-@*             <input type="tel" id="Phone" name="Phone" required /> *@
-@*         </div> *@
-@*         <div> *@
-@*             <label for="Date">Дата:</label> *@
-@*             <input type="date" id="Date" name="Date" required /> *@
-@*         </div> *@
-@*         <div> *@
-@*             <button type="submit">Сохранить</button> *@
-@*         </div> *@
-@*     </form> *@
-@* </div> *@
-
-@* <script> *@
-@*     document.addEventListener("DOMContentLoaded", function () { *@
-@*         var parent = document.querySelector('.not-hide'); *@
-@*         var allChildren = parent.querySelectorAll('*'); // Выбираем все вложенные элементы на любом уровне *@
-
-@*         allChildren.forEach(function (element) { *@
-@*             element.classList.add('not-hide'); // Добавляем класс ко всем элементам *@
-@*         }); *@
-@*     }); *@
-@* </script> *@
-
-@* <script> *@
-@*     function showInfo(event, info) { *@
-@*         var infoBox = document.getElementById('infoBox'); *@
-
-@*         // Устанавливаем позицию блока информации над маркером *@
-@*         infoBox.style.top = (event.pageY-70) + 'px'; *@
-@*         infoBox.style.left = event.pageX + 'px'; // Сдвигаем вверх на 40px *@
-
-@*         // Отображаем блок информации *@
-@*         infoBox.style.display = 'unset'; *@
-@*     } *@
-
-@*     document.addEventListener('click', function (event) { *@
-@*         var infoBox = document.getElementById('infoBox'); *@
-@*         console.log(event.target.classList) *@
-@*         // if (!event.target.classList.contains('not-hide')) { *@
-@*         //     infoBox.style.display = 'none'; // Скрываем блок информации, если клик не по маркеру *@
-@*         // } *@
-@*     }); *@
-@* </script> *@
-<h2>Кликните по точке на изображении</h2>
+<h2>Image with Markers</h2>
+<div asp-validation-summary="All" style="color: darkred; font-weight: bold;"></div>
 <div style="position: relative; display: inline-block;">
-    <img src="/images/Map.jpg" alt="Карта" style="width: 600px; height: auto;" />
-    <a href="/Home/Create" style="position: absolute; top: 50px; left: 100px; width: 20px; height: 20px; background: red; border-radius: 50%; display: inline-block;"></a>
+    <img id="image" src="~/images/Map.jpg" alt="Image" style="width: 600px; height: auto;" />
+
+    <div id="markers" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
+        @foreach (var marker in Model)
+        {
+            <i class="marker not-hide @(marker.Type) @(marker.Size)"
+               style="position: absolute; color: red; left: @(marker.X.ToString().Replace(',','.'))%; top: @(marker.Y.ToString().Replace(',','.'))%; cursor: pointer;"
+               onclick="showInfo(event, '@marker.Place')"></i>
+        }
+    </div>
 </div>
 
+<div id="infoBox" class="not-hide" style="display: none; position: absolute; padding: 10px; background-color: white; border: 1px solid black; z-index: 1000;">
+    <form asp-action="SaveUserData" method="post">
+        <div>
+            <label for="Name">Имя:</label>
+            <input type="text" id="Name" name="Name" required />
+        </div>
+        <div>
+            <label for="Phone">Номер телефона:</label>
+            <input type="tel" id="Phone" name="Phone" required />
+        </div>
+        <div>
+            <label for="Date">Дата:</label>
+            <input type="date" id="Date" name="Date" required />
+        </div>
+        <input id="place-input" type="hidden" name="Place" />
+        <div>
+            <button type="submit">Сохранить</button>
+        </div>
+    </form>
+</div>
+
+<script>
+
+     document.addEventListener("DOMContentLoaded", function () {
+         var parent = document.querySelector('.not-hide');
+         var allChildren = parent.querySelectorAll('*'); // Выбираем все вложенные элементы на любом уровне
+
+         allChildren.forEach(function (element) {
+             element.classList.add('not-hide'); // Добавляем класс ко всем элементам
+         });
+     });
+
+    function showInfo(event, info) {
+        var infoBox = document.getElementById('infoBox');
+
+        // Устанавливаем позицию блока информации над маркером
+        infoBox.style.top = (event.pageY-70) + 'px';
+        infoBox.style.left = event.pageX + 'px'; // Сдвигаем вверх на 40px
+
+        // Отображаем блок информации
+        infoBox.querySelector("#place-input").value = info;
+        infoBox.style.display = 'unset';
+    }
+
+    document.addEventListener('click', function (event) {
+        var infoBox = document.getElementById('infoBox');
+        console.log(event.target.classList)
+        // if (!event.target.classList.contains('not-hide')) {
+        //     infoBox.style.display = 'none'; // Скрываем блок информации, если клик не по маркеру
+        // }
+    });
+</script>
+
+
+@* 
+    <h2>Кликните по точке на изображении</h2>
+    <div style="position: relative; display: inline-block;">
+        <img src="/images/Map.jpg" alt="Карта" style="width: 600px; height: auto;" />
+        <a href="/Home/Create" style="position: absolute; top: 50px; left: 100px; width: 20px; height: 20px; background: red; border-radius: 50%; display: inline-block;"></a>
+    </div> 
+*@
+
+<div>
+    <a href="/Home/OrderList">Список заказов</a>
+    <a href="/Auth/Logout">Выход, челллл</a>
+</div>

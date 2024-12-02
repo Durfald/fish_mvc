@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace fish_mvc.Models
 {
@@ -24,5 +25,8 @@ namespace fish_mvc.Models
         public required int TotalPlaces { get; set; }
 
         public int FreePlaces { get; set; }
+
+        [Column("place")]
+        public string Place { get; set; } = string.Empty;
     }
 }
